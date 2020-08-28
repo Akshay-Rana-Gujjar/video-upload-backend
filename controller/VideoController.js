@@ -1,16 +1,31 @@
 var fs = require("fs");
 var firebaseCloudStoarage = require("../config/firebaseConnfig").firestore();
-const { VIDEO_COLLECTION_NAME } = require("../constants/constants");
+const { VIDEO_COLLECTION_NAME, VIDEO_FILE_PATH } = require("../constants/constants");
 
 module.exports = {
     uploadController: async function (req, res) {
 
         if (!req.files || Object.keys(req.files).length === 0) {
-            return res.status(400).send("No files were uploaded.");
+            return res.status(400).json({ status: 400, mesasage: null, error: "No files were uploaded.", videoUrl: null });
+        }
+
+        var videoFilePath = VIDEO_FILE_PATH;
+
+        if (!fs.existsSync(videoFilePath)) {
+
+            var rawPath = videoFilePath.replace(process.cwd(), "");
+            var splitPath = rawPath.split("/");
+            var currentPath = process.cwd();
+
+            splitPath.forEach((folder => {
+                currentPath = currentPath + "/" +folder;
+                if (!fs.existsSync(currentPath))
+                    fs.mkdirSync(currentPath);
+            }));
+
         }
 
         var videoFileObject = req.files.video; //getting uploaded video object 
-        var videoFilePath = process.cwd() + "/public/videos";
         var videoFileName = `${new Date().getTime()}-${videoFileObject.name}`;
         var { videoTitle = videoFileName } = req.body; //getting the video title and set default video title from video name
 
@@ -76,5 +91,4 @@ module.exports = {
         }
 
     }
-
 };
