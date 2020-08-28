@@ -73,6 +73,7 @@ module.exports = {
             res.json({ status: 200, error: null, videoList: videosDoc });
 
         } catch (error) {
+            console.log(error);
             res.status(500).json({ status: 500, error, videoList: null });
         }
 
