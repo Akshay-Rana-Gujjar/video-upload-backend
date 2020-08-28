@@ -28,7 +28,7 @@ module.exports = {
             return res.json({ status: 200, message: "File Uploaded successfully!", error: null, videoUrl });
 
         } catch (error) {
-            consooe.log(error);
+            console.log(error);
             return res.status(500).json({ status: 500, mesasage: null, error, videoUrl: null });
         }
     },
