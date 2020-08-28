@@ -64,12 +64,10 @@ module.exports = {
     videoListController: async (req, res) => {
 
         try {
-            var videosDoc = await firebaseCloudStoarage.collection(VIDEO_COLLECTION_NAME)
-                .get()
-                .map(doc => {
-                    return { id: doc.id, ...doc.data() };
-                });
-
+            var videosDoc = await firebaseCloudStoarage.collection(VIDEO_COLLECTION_NAME).get();
+            videosDoc = videosDoc.docs.map(doc => {
+                return { id: doc.id, ...doc.data() };
+            });
             res.json({ status: 200, error: null, videoList: videosDoc });
 
         } catch (error) {
